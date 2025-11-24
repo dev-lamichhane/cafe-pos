@@ -181,7 +181,7 @@ export default function OrderPage() {
             .filter((i) => i.category === activeCategory)
             .map((item) => (
               <button
-                key={item.id}
+                key={`${item.id}-${new Date()}`}
                 onClick={() => addItem(tableId, item.id)}
                 className="bg-slate-800 hover:bg-slate-700 p-4 rounded-xl text-left shadow-md active:scale-95 transition-transform"
               >
