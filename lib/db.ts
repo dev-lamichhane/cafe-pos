@@ -20,20 +20,27 @@ CREATE TABLE IF NOT EXISTS sales (
   timestamp INTEGER
 );
 
-  CREATE TABLE IF NOT EXISTS credit_customers (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    phone TEXT,
-    items_json TEXT,
-    amount REAL,
-    paid INTEGER DEFAULT 0,
-    timestamp INTEGER
-  );
+CREATE TABLE IF NOT EXISTS credit_customers (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT,
+  phone TEXT,
+  items_json TEXT,
+  amount REAL,
+  paid INTEGER DEFAULT 0,
+  timestamp INTEGER
+);
 
-  CREATE TABLE IF NOT EXISTS sync_queue (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    payload_json TEXT,
-    timestamp INTEGER
-  );
+CREATE TABLE IF NOT EXISTS expenses (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  description TEXT NOT NULL,
+  amount REAL NOT NULL,
+  timestamp INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS sync_queue (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  payload_json TEXT,
+  timestamp INTEGER
+);
 `);
 

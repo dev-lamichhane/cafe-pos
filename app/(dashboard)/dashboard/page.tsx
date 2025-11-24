@@ -70,6 +70,17 @@ export default function DashboardPage() {
           </span>
         </button>
 
+        {/* EXPENSES */}
+        <button
+          onClick={() => router.push("/expenses")}
+          className="bg-slate-800 hover:bg-slate-700 rounded-xl p-6 text-left shadow-lg transition flex flex-col"
+        >
+          <span className="text-2xl font-semibold mb-2">Expenses</span>
+          <span className="text-slate-400 text-sm">
+            Log daily purchases & corrections.
+          </span>
+        </button>
+
         {/* END DAY */}
         <button
           onClick={() => setEndDayOpen(true)}

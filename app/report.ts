@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
+import { getExpensesInRange } from '@/lib/expenses'
 
 export const runtime = 'nodejs'
 
@@ -77,6 +78,10 @@ export async function GET() {
       .map(([hour, count]) => ({ hour: Number(hour), count }))
       .sort((a, b) => a.hour - b.hour)
 
+    const expenses = getExpensesInRange(start, end)
+    const expensesTotal = expenses.reduce((sum, exp) => sum + exp.amount, 0)
+    const expectedTillCash = cash - expensesTotal
+
     // 4) CREATE PDF
     const pdfDoc = await PDFDocument.create()
     const page = pdfDoc.addPage([595.28, 841.89]) // A4 portrait
@@ -120,6 +125,8 @@ export async function GET() {
     drawText(`Cash: Rs ${cash.toFixed(2)}`)
     drawText(`QR: Rs ${qr.toFixed(2)}`)
     drawText(`Credit Collected: Rs ${credit.toFixed(2)}`)
+    drawText(`Expenses: Rs ${expensesTotal.toFixed(2)}`)
+    drawText(`Expected Till Cash: Rs ${expectedTillCash.toFixed(2)}`)
     drawText(`Total Orders: ${orderCount}`)
     drawText(`Total Items Sold: ${totalItems}`)
 
@@ -153,6 +160,25 @@ export async function GET() {
     } else {
       for (const h of busyHours) {
         drawText(`${h.hour}:00 - ${h.hour + 1}:00  →  ${h.count} orders`)
+        if (y < 100) {
+          y = 800
+          pdfDoc.addPage(page)
+        }
+      }
+    }
+
+    y -= 10
+    drawText('------------------------', { size: 12 })
+
+    drawText('Expenses', { bold: true, size: 14 })
+    if (expenses.length === 0) {
+      drawText('No expenses recorded.')
+    } else {
+      for (const exp of expenses) {
+        const timeStr = new Date(exp.timestamp).toLocaleTimeString()
+        drawText(
+          `${timeStr} | Rs ${exp.amount.toFixed(2)} | ${exp.description}`
+        )
         if (y < 100) {
           y = 800
           pdfDoc.addPage(page)
